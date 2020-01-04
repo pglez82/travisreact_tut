@@ -1,68 +1,82 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
-## Available Scripts
+## Setting up the enviroment
+We are going to prepare the enviroment user docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 16.04LTS container as our development enviroment:
+```
+docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
+```
 
-In the project directory, you can run:
+Now, we can install Node in our container:
+```
+apt-get update
+apt-get install curl
+curl -sL https://deb.nodesource.com/setup_12.x | bash -
+apt-get install nodejs
+```
+With node installed we have **npm** and **npx** available that will be used in the next steps.
 
-### `npm start`
+Let's install also the git client. We will use this as travis needs that our code is hosted in the control version system:
+```
+apt-get install git
+```
+Also install nano our your other text editor of your preference:
+```
+apt-get install nano
+```
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Creating the react app
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The easiest way to create a react app is to use the project [create react app](https://github.com/facebook/create-react-app), that not only creates a react application but configures it propertly. Among other things we will get:
+* Simple react web application working
+* Unit tests configured and ready to work
+* Git repository initialized locally
 
-### `npm test`
+In order to use this project, the only required step is to execute (in the directory that we want the project to be generated, in our case **/webapps**):
+```javascript
+cd /webapps
+npx create-react-app travisreact_tut
+```
+This code will work considering that we have properly installed node.
+The name *travistest* is the name of our application. The generator will generate a directory with the app inside. If we want to start our app in a local server, we just need to type:
+```javascript
+cd travisreact_tut
+npm start
+```
+We can see our application in http://localhost:3000 . It is important to understand that this method is only good for develpment purposes because the react (JSX) code from react is translated on the fly (thus, it is slow). If we want to 'compile' the code and create html, javascript and css files only, we can execute `npm run build`.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+After checking that everything is working propertly, we need to create a new git repository to host our application and push the application to it. In my case I will create the repository **travisreact_tut**.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Configure travis
+Create a [Travis](https://travis-ci.org/) account. It is important to note that travis is free for our GitHub public respositories. Configure Travis to monitor the git repository where you host your app (in my case **travisreact_tut**). Everytime that Travis detects a new commit it will test the application and if the tests are correct, the application will be deployed automatically. For this to work, we need to give Travis permissions to work in our GitHub account:
++ Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
++ Create an enviroment variable in travis called github_token with the value obtained in the previous step.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Now, we got to the most important part, the **.travis.yml** file. This file should be in the project root:
+```
+language: node_js
+node_js:
+  - 12.14.0
+cache:
+  directories:
+  - node_modules
+script:
+  - npm test
+  - npm run build
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  local_dir: build
+  on:
+    branch: master
+```
+We also need to configure the file `package.json`. In this file we will add a new line indicating where our application will be deployed:
+```
+"homepage": "https://pglez82.github.io/travistest/",
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+As a final step, we need to make sure that we are using the gh-pages branch as our repository page (this is configured in the settings part of our repository).
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Final tests
+Change the App.js page, modify the tests and make a commit. Travis should detect the commit, create a new virtual enviroment where it will download the code, execute the tests (npm test) and then, if the tests are passed, execute npm build to build a release and deploy it to github pages.
