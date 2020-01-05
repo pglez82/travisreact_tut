@@ -80,3 +80,18 @@ As a final step, we need to make sure that we are using the gh-pages branch as o
 
 ## Final tests
 Change the App.js page, modify the tests and make a commit. Travis should detect the commit, create a new virtual enviroment where it will download the code, execute the tests (npm test) and then, if the tests are passed, execute npm build to build a release and deploy it to github pages.
+
+## Codecov
+Codecov is a tool that allows us to see which part of the code is covered by the tests and which part is not. This tool is very easy to integrate with Travis. We only have to follow the following steps:
+1. Create an account in [Codecov](https://codecov.io). Log in using your Git account so Codecov can find your repositories. Codecov is free for public repositories.
+2. Look for your Git repository in your Codecov dashboard
+3. Configure your app so it generates a code coverage report and uploads it to the Codecov dashboard. We need to make two modifications for this:
+File *package.json*. Add `--coverage` so Jest generates a code coverage report.
+```
+"test": "react-scripts test --coverage",
+```
+File *.travis.yml*. In the script section, add the following:
+```
+  - npm install -g codecov
+  - npm test && codecov
+```
