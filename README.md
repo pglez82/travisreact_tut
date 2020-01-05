@@ -86,6 +86,7 @@ Codecov is a tool that allows us to see which part of the code is covered by the
 1. Create an account in [Codecov](https://codecov.io). Log in using your Git account so Codecov can find your repositories. Codecov is free for public repositories.
 2. Look for your Git repository in your Codecov dashboard
 3. Configure your app so it generates a code coverage report and uploads it to the Codecov dashboard. We need to make two modifications for this:
+
 File *package.json*. Add `--coverage` so Jest generates a code coverage report.
 ```
 "test": "react-scripts test --coverage",
@@ -95,3 +96,5 @@ File *.travis.yml*. In the script section, add the following:
   - npm install -g codecov
   - npm test && codecov
 ```
+
+If now we make a new commit, a code coverage report will be created that will be analized by the Codecov tool and uploaded to the Codecov.io website. We can check this report in our Codecov dashboard.
