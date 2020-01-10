@@ -7,7 +7,7 @@ docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name 
 ```
 
 Now, we can install Node in our container:
-```
+```bash
 apt-get update
 apt-get install curl
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
