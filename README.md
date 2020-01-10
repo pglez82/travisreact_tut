@@ -1,7 +1,7 @@
 This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
 ## Setting up the enviroment
-We are going to prepare the enviroment user docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 16.04LTS container as our development enviroment:
+We are going to prepare the enviroment using docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 16.04LTS container as our development enviroment:
 ```
 docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
 ```
