@@ -127,7 +127,8 @@ So know our site with the documentation is in build/docs. The idea is to deploy 
 
 ```json
 "scripts": {
-    ...
+    . . .
     "docs": "asciidoctor -D build/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc && cp -R src/docs/images build/docs",
-    ...
+    . . .
+ }
 ```
