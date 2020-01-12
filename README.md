@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/pglez82/travisreact_tut.svg?branch=master)](https://travis-ci.org/pglez82/travisreact_tut.svg)
-
-[![codecov](https://codecov.io/gh/pglez82/travisreact_tut/branch/master/graph/badge.svg)](https://codecov.io/gh/pglez82/travisreact_tut)
+[![Build Status](https://travis-ci.org/pglez82/travisreact_tut.svg?branch=master)](https://travis-ci.org/pglez82/travisreact_tut.svg) [![codecov](https://codecov.io/gh/pglez82/travisreact_tut/branch/master/graph/badge.svg)](https://codecov.io/gh/pglez82/travisreact_tut)
 
 
 
