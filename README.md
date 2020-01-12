@@ -102,3 +102,12 @@ File *.travis.yml*. In the script section, add the following:
 ```
 
 If now we make a new commit, a code coverage report will be created that will be analized by the Codecov tool and uploaded to the Codecov.io website. We can check this report in our Codecov dashboard.
+
+Codecov can be configured. For instance we may want to ignore some files that do not need to be tested. We are going to use this for not analyzing the `index.js` file.
+
+File *codecov.yml* (place this file in the project root)
+```json
+ignore:
+  - "src/index.js"
+```
+For more configuration options you can check: [](https://docs.codecov.io/docs/codecov-yaml).
