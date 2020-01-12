@@ -76,8 +76,8 @@ deploy:
     branch: master
 ```
 We also need to configure the file `package.json`. In this file we will add a new line indicating where our application will be deployed:
-```
-"homepage": "https://pglez82.github.io/travistest/",
+```json
+"homepage": "https://pglez82.github.io/travisreact_tut/",
 ```
 
 As a final step, we need to make sure that we are using the gh-pages branch as our repository page (this is configured in the settings part of our repository).
