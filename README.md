@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/pglez82/travisreact_tut.svg?branch=master)](https://travis-ci.org/pglez82/travisreact_tut.svg) [![codecov](https://codecov.io/gh/pglez82/travisreact_tut/branch/master/graph/badge.svg)](https://codecov.io/gh/pglez82/travisreact_tut)
-
-
+[![Build Status](https://travis-ci.org/pglez82/travisreact_tut.svg?branch=master)](https://travis-ci.org/pglez82/travisreact_tut.svg) [![codecov](https://codecov.io/gh/pglez82/travisreact_tut/branch/master/graph/badge.svg)](https://codecov.io/gh/pglez82/travisreact_tut) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2f1d352bb3c8454cb77353f3e2098476)](https://www.codacy.com/manual/pglez82/travisreact_tut?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pglez82/travisreact_tut&amp;utm_campaign=Badge_Grade)
 
 This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
@@ -31,9 +29,9 @@ apt-get install nano
 ## Creating the react app
 
 The easiest way to create a react app is to use the project [create react app](https://github.com/facebook/create-react-app), that not only creates a react application but configures it propertly. Among other things we will get:
-* Simple react web application working
-* Unit tests configured and ready to work
-* Git repository initialized locally
+  * Simple react web application working
+  * Unit tests configured and ready to work
+  * Git repository initialized locally
 
 In order to use this project, the only required step is to execute (in the directory that we want the project to be generated, in our case **/webapps**):
 ```javascript
@@ -53,8 +51,8 @@ After checking that everything is working propertly, we need to create a new git
 
 ## Configure travis
 Create a [Travis](https://travis-ci.org/) account. It is important to note that travis is free for our GitHub public respositories. Configure Travis to monitor the git repository where you host your app (in my case **travisreact_tut**). Everytime that Travis detects a new commit it will test the application and if the tests are correct, the application will be deployed automatically. For this to work, we need to give Travis permissions to work in our GitHub account:
-+ Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
-+ Create an enviroment variable in travis called github_token with the value obtained in the previous step.
+  * Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
+  * Create an enviroment variable in travis called github_token with the value obtained in the previous step.
 
 Now, we got to the most important part, the **.travis.yml** file. This file should be in the project root:
 ```
@@ -102,3 +100,35 @@ File *.travis.yml*. In the script section, add the following:
 ```
 
 If now we make a new commit, a code coverage report will be created that will be analized by the Codecov tool and uploaded to the Codecov.io website. We can check this report in our Codecov dashboard.
+
+Codecov can be configured. For instance we may want to ignore some files that do not need to be tested. We are going to use this for not analyzing the `index.js` file.
+
+File *codecov.yml* (place this file in the project root)
+```json
+ignore:
+  - "src/index.js"
+```
+For more configuration options you can check: [About the Codecov yaml](https://docs.codecov.io/docs/codecov-yaml).
+
+## Arc42 documentation [under construction]
+Under the directory src/docs we have the documentation in AsciiDoc format (template downloaded from [here](https://arc42.org/download)). We are going to install first the required packages for generate the documentation in html from this asciidoc files:
+```bash
+apt-get install ruby openjdk-8-jre
+gem install asciidoctor asciidoctor-diagram
+```
+Note: openjdk-8-jre and asciidoctor-diagram are only required if we want to use **PlantUML** to build UML diagrams.
+
+After we have the required tools, we can generate the help files (execute this in the project root):
+```bash
+asciidoctor --trace -D build/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc
+cp -R src/docs/images build/docs
+```
+So know our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis. Lets add a new task in our package.json file.
+
+```json
+"scripts": {
+
+    "docs": "asciidoctor -D build/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc && cp -R src/docs/images build/docs",
+
+ }
+```
