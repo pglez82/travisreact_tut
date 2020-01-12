@@ -109,3 +109,20 @@ ignore:
   - "src/index.js"
 ```
 For more configuration options you can check: [About the Codecov yaml](https://docs.codecov.io/docs/codecov-yaml).
+
+## Arc42 documentation [under construction]
+Under the directory src/docs we have the documentation in AsciiDoc format (template downloaded from [here](https://arc42.org/download)). We are going to install first the required packages for generate the documentation in html from this asciidoc files:
+```bash
+apt-get install ruby openjdk-8-jre
+gem install asciidoctor asciidoctor-diagram
+```
+Note: openjdk-8-jre and asciidoctor-diagram are only required if we want to use **PlantUML** to build UML diagrams.
+
+After we have the required tools, we can generate the help files (execute this in the project root):
+```bash
+asciidoctor -D ../../build/docs -B src/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc
+cp -R src/docs/images build/docs
+```
+So know our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis.
+
+
