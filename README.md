@@ -31,9 +31,9 @@ apt-get install nano
 ## Creating the react app
 
 The easiest way to create a react app is to use the project [create react app](https://github.com/facebook/create-react-app), that not only creates a react application but configures it propertly. Among other things we will get:
-* Simple react web application working
-* Unit tests configured and ready to work
-* Git repository initialized locally
+*  Simple react web application working
+*  Unit tests configured and ready to work
+*  Git repository initialized locally
 
 In order to use this project, the only required step is to execute (in the directory that we want the project to be generated, in our case **/webapps**):
 ```javascript
@@ -53,8 +53,8 @@ After checking that everything is working propertly, we need to create a new git
 
 ## Configure travis
 Create a [Travis](https://travis-ci.org/) account. It is important to note that travis is free for our GitHub public respositories. Configure Travis to monitor the git repository where you host your app (in my case **travisreact_tut**). Everytime that Travis detects a new commit it will test the application and if the tests are correct, the application will be deployed automatically. For this to work, we need to give Travis permissions to work in our GitHub account:
-+ Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
-+ Create an enviroment variable in travis called github_token with the value obtained in the previous step.
+*  Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
+*  Create an enviroment variable in travis called github_token with the value obtained in the previous step.
 
 Now, we got to the most important part, the **.travis.yml** file. This file should be in the project root:
 ```
