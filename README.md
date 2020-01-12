@@ -132,3 +132,32 @@ So know our site with the documentation is in build/docs. The idea is to deploy 
 
  }
 ```
+Now, the last step is to tell travis to generate the doc htmls and upload them along with our web application. Lets modify the .travis.yml file:
+```
+language: node_js
+node_js:
+  - 12.14.0
+cache:
+  directories:
+  - node_modules
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install ruby openjdk-8-jre
+  - sudo gem install asciidoctor asciidoctor-diagram
+script:
+  - npm install -g codecov
+  - npm test && codecov
+  - npm run build
+  - npm run docs
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  local_dir: build
+  on:
+    branch: master
+```
+
+In this file we need to pay attention to the `before_install` section where we are installing the dependencies for running asciidoctor (with PlantUML support) and then, after running `npm run build`, execute `npm run docs` that will generate the docs inside the build directory. We do not have to change anything else as we are deploying the build directory in the next section. If everything worked properly we should be able to see the documentation under:
+
+[https://pglez82.github.io/travisreact_tut/docs/index.html](https://pglez82.github.io/travisreact_tut/docs/index.html)
