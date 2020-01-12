@@ -10,7 +10,7 @@ We are going to prepare the enviroment using docker. This way we will ensure tha
 docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
 ```
 
-Now, we can install Node in our container:
+This Ubuntu 16.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
 ```bash
 apt-get update
 apt-get install curl
