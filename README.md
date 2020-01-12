@@ -110,7 +110,7 @@ ignore:
 ```
 For more configuration options you can check: [About the Codecov yaml](https://docs.codecov.io/docs/codecov-yaml).
 
-## Arc42 documentation [under construction]
+## Arc42 documentation
 Under the directory src/docs we have the documentation in AsciiDoc format (template downloaded from [here](https://arc42.org/download)). We are going to install first the required packages for generate the documentation in html from this asciidoc files:
 ```bash
 apt-get install ruby openjdk-8-jre
