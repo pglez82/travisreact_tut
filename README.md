@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pglez82/travisreact_tut.svg?branch=master)](https://travis-ci.org/pglez82/travisreact_tut.svg)
+
 This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
 ## Setting up the enviroment
