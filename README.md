@@ -110,4 +110,4 @@ File *codecov.yml* (place this file in the project root)
 ignore:
   - "src/index.js"
 ```
-For more configuration options you can check: [](https://docs.codecov.io/docs/codecov-yaml).
+For more configuration options you can check: [About the Codecov yaml](https://docs.codecov.io/docs/codecov-yaml).
