@@ -123,7 +123,7 @@ After we have the required tools, we can generate the help files (execute this i
 asciidoctor --trace -D build/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc
 cp -R src/docs/images build/docs
 ```
-So know our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis. Lets add a new task in our package.json file.
+So now our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis. Lets add a new task in our package.json file.
 
 ```json
 "scripts": {
