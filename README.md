@@ -161,3 +161,6 @@ deploy:
 In this file we need to pay attention to the `before_install` section where we are installing the dependencies for running asciidoctor (with PlantUML support) and then, after running `npm run build`, execute `npm run docs` that will generate the docs inside the build directory. We do not have to change anything else as we are deploying the build directory in the next section. If everything worked properly we should be able to see the documentation under:
 
 [https://pglez82.github.io/travisreact_tut/docs/index.html](https://pglez82.github.io/travisreact_tut/docs/index.html)
+
+## More about testing
+The default setup for testing a react app is a testing framework called [Jest](https://jestjs.io/). Jest allow us to run only the relevant tests for the changed code. That means that if we change a file, it will run only the tests related with this file. Obviously we have the option of running all tests if we want. Jest is launched executing `npm test` as we have seen before. Test library used by default is [React testing library](https://testing-library.com/docs/react-testing-library/intro). This library is designed to easily test React components using the DOM elements.
