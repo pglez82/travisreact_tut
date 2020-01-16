@@ -81,7 +81,7 @@ We also need to configure the file `package.json`. In this file we will add a ne
 As a final step, we need to make sure that we are using the gh-pages branch as our repository page (this is configured in the settings part of our repository).
 
 ## Final tests
-Change the App.js page, modify the tests and make a commit. Travis should detect the commit, create a new virtual enviroment where it will download the code, execute the tests (npm test) and then, if the tests are passed, execute npm build to build a release and deploy it to github pages.
+Make a modification in the App.js page. After doing so, you should make sure that the tests are still passing (maybe we need to modify the tests as well). For checking the tests is recommended to have a terminal with `npm test` open. This way, when **Jest** detects a change in your code, it will rerun the affected tests automatically. After checking that everything is ok, make a commit and a push. Travis should detect the commit in github, create a new virtual enviroment where it will download the code, execute the tests there (npm test) and then, if the tests are passed (in this case, it will execute all the tests, not only the changed files), execute npm build to build a release and deploy it to github pages.
 
 ## Codecov
 Codecov is a tool that allows us to see which part of the code is covered by the tests and which part is not. This tool is very easy to integrate with Travis. We only have to follow the following steps:
