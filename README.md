@@ -3,13 +3,13 @@
 This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
 ## Setting up the enviroment
-We are going to prepare the enviroment using docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 16.04LTS container as our development enviroment:
+We are going to prepare the enviroment using docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 18.04LTS container as our development enviroment:
 ```
-docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
+docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:18.04
 ```
 Note: "$PWD/Proyectos/travisreact_tut" will be the route of the folder (in your machine) where you want to store the project. You should create this folder. Change the route accordingly. 
 
-This Ubuntu 16.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
+This Ubuntu 18.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
 ```bash
 apt-get update
 apt-get install curl
