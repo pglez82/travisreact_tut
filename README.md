@@ -7,6 +7,7 @@ We are going to prepare the enviroment using docker. This way we will ensure tha
 ```
 docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
 ```
+Note: "$PWD/Proyectos/travisreact_tut" will be the route of the folder (in your machine) where you want to store the project. You should create this folder. Change the route accordingly. 
 
 This Ubuntu 16.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
 ```bash
