@@ -3,12 +3,13 @@
 This project shows how to create a new react webapp and configure it using travis in order to enable continuous integration.
 
 ## Setting up the enviroment
-We are going to prepare the enviroment using docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 16.04LTS container as our development enviroment:
+We are going to prepare the enviroment using docker. This way we will ensure that the setup will work without depending on our local setup. Lets create a Ubuntu 18.04LTS container as our development enviroment:
 ```
-docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:16.04
+docker run -it -v "$PWD/Proyectos/travisreact_tut":/webapps -p 3000:3000 --name travisreact_tut ubuntu:18.04
 ```
+Note: "$PWD/Proyectos/travisreact_tut" will be the route of the folder (in your machine) where you want to store the project. You should create this folder. Change the route accordingly. 
 
-This Ubuntu 16.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
+This Ubuntu 18.04 image does not have Node installed. We could have chosen here a docker image with node but we are using this one in order to illustrate how to **install node** in Ubuntu:
 ```bash
 apt-get update
 apt-get install curl
@@ -81,7 +82,7 @@ We also need to configure the file `package.json`. In this file we will add a ne
 As a final step, we need to make sure that we are using the gh-pages branch as our repository page (this is configured in the settings part of our repository).
 
 ## Final tests
-Change the App.js page, modify the tests and make a commit. Travis should detect the commit, create a new virtual enviroment where it will download the code, execute the tests (npm test) and then, if the tests are passed, execute npm build to build a release and deploy it to github pages.
+Make a modification in the App.js page. After doing so, you should make sure that the tests are still passing (maybe we need to modify the tests as well). For checking the tests is recommended to have a terminal with `npm test` open. This way, when **Jest** detects a change in your code, it will rerun the affected tests automatically. After checking that everything is ok, make a commit and a push. Travis should detect the commit in github, create a new virtual enviroment where it will download the code, execute the tests there (npm test) and then, if the tests are passed (in this case, it will execute all the tests, not only the changed files), execute npm build to build a release and deploy it to github pages.
 
 ## Codecov
 Codecov is a tool that allows us to see which part of the code is covered by the tests and which part is not. This tool is very easy to integrate with Travis. We only have to follow the following steps:
@@ -110,7 +111,7 @@ ignore:
 ```
 For more configuration options you can check: [About the Codecov yaml](https://docs.codecov.io/docs/codecov-yaml).
 
-## Arc42 documentation [under construction]
+## Arc42 documentation
 Under the directory src/docs we have the documentation in AsciiDoc format (template downloaded from [here](https://arc42.org/download)). We are going to install first the required packages for generate the documentation in html from this asciidoc files:
 ```bash
 apt-get install ruby openjdk-8-jre
@@ -123,7 +124,7 @@ After we have the required tools, we can generate the help files (execute this i
 asciidoctor --trace -D build/docs -a imagesdir=./images -r asciidoctor-diagram src/docs/index.adoc
 cp -R src/docs/images build/docs
 ```
-So know our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis. Lets add a new task in our package.json file.
+So now our site with the documentation is in build/docs. The idea is to deploy it along the main website. Obviously this is optional. In this example we are going to integrate it with npm and travis. Lets add a new task in our package.json file.
 
 ```json
 "scripts": {
@@ -132,3 +133,35 @@ So know our site with the documentation is in build/docs. The idea is to deploy 
 
  }
 ```
+Now, the last step is to tell travis to generate the doc htmls and upload them along with our web application. Lets modify the .travis.yml file:
+```
+language: node_js
+node_js:
+  - 12.14.0
+cache:
+  directories:
+  - node_modules
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install ruby openjdk-8-jre
+  - sudo gem install asciidoctor asciidoctor-diagram
+script:
+  - npm install -g codecov
+  - npm test && codecov
+  - npm run build
+  - npm run docs
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github_token
+  local_dir: build
+  on:
+    branch: master
+```
+
+In this file we need to pay attention to the `before_install` section where we are installing the dependencies for running asciidoctor (with PlantUML support) and then, after running `npm run build`, execute `npm run docs` that will generate the docs inside the build directory. We do not have to change anything else as we are deploying the build directory in the next section. If everything worked properly we should be able to see the documentation under:
+
+[https://pglez82.github.io/travisreact_tut/docs/index.html](https://pglez82.github.io/travisreact_tut/docs/index.html)
+
+## More about testing
+The default setup for testing a react app is a testing framework called [Jest](https://jestjs.io/). Jest allow us to run only the relevant tests for the changed code. That means that if we change a file, it will run only the tests related with this file. Obviously we have the option of running all tests if we want. Jest is launched executing `npm test` as we have seen before. Test library used by default is [React testing library](https://github.com/testing-library/react-testing-library). This library is designed to easily test React components using the DOM elements.
