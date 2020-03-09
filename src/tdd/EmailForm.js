@@ -12,6 +12,11 @@ class EmailForm extends React.Component {
         };
     }
 
+    dummyMethod()
+    {
+        console.log("Just a method")
+    }
+
     changeEmail(e) {
         const email = e.target.value;
         this.setState({email: email, enabled: email === this.state.remail});
