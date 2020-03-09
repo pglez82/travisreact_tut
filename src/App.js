@@ -17,8 +17,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-        
-          Learn React. Developed using Docker by Pablo Gonzalez.
+          Learn React. Developed using Docker by Pablo González.
         </a>
         <EmailForm />
       </header>

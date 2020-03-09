@@ -5,7 +5,7 @@ import EmailForm from "./EmailForm";
 test('check email button activated when 2 emails are equal', async () => {
   const correctValues = { email: 'test@example.org', remail: 'test@example.org' };
 
-  const { getByLabelText, getByText, container } = render(<EmailForm/>);
+  const { getByLabelText, getByText } = render(<EmailForm/>);
   
   const inputEmail = getByLabelText('email-input');
   const inputRemail = getByLabelText('remail-input');
