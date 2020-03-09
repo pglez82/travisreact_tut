@@ -15,6 +15,7 @@ class EmailForm extends React.Component {
     thisIsANewFunction()
     {
         console.log("hi")
+        console.log("another commit")
     }
 
     changeEmail(e) {
