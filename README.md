@@ -55,6 +55,8 @@ Create a [Travis](https://travis-ci.org/) account. It is important to note that 
   * Configure a GitHub access token. This is in done in the "global settings page>Developer Settings>Personal access tokens".  
   * Create an enviroment variable in travis called github_token with the value obtained in the previous step.
 
+We need to do this because travis will work in a container that is not in our machine. It will clone the respository, run the tests, and deploy to our github repository. For this step, it need the token.
+
 Now, we got to the most important part, the **.travis.yml** file. This file should be in the project root:
 ```
 language: node_js
@@ -74,6 +76,9 @@ deploy:
   on:
     branch: master
 ```
+
+In the deploy section we are telling travis that we want to deploy to GitHub pages. Obviously, there are other [supported services](https://docs.travis-ci.com/user/deployment#supported-providers) like Amazon AWS, Google Cloud, etc. 
+
 We also need to configure the file `package.json`. In this file we will add a new line indicating where our application will be deployed:
 ```json
 "homepage": "https://pglez82.github.io/travisreact_tut/",
