@@ -24,7 +24,7 @@ class EmailForm extends React.Component {
    
     changeRemail(e) {
         const remail = e.target.value;
-        this.setState({remail: remail, enabled: remail !== this.state.email});
+        this.setState({remail: remail, enabled: remail === this.state.email});
     }
 
     render()
