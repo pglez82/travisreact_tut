@@ -12,12 +12,6 @@ class EmailForm extends React.Component {
         };
     }
 
-    thisIsANewFunction()
-    {
-        console.log("hi")
-        console.log("another commit")
-    }
-
     changeEmail(e) {
         const email = e.target.value;
         this.setState({email: email, enabled: email === this.state.remail});
