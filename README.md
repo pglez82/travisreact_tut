@@ -170,3 +170,7 @@ In this file we need to pay attention to the `before_install` section where we a
 
 ## More about testing
 The default setup for testing a react app is a testing framework called [Jest](https://jestjs.io/). Jest allow us to run only the relevant tests for the changed code. That means that if we change a file, it will run only the tests related with this file. Obviously we have the option of running all tests if we want. Jest is launched executing `npm test` as we have seen before. Test library used by default is [React testing library](https://github.com/testing-library/react-testing-library). This library is designed to easily test React components using the DOM elements.
+
+## Jest-cucumber [Under construction]
+Jest needs the tests to be under src and with name ending in test.js or spec.js
+VS code extensions: alexkrechik.cucumberautocomplete,piotr-porzuczek.jest-cucumber-code-generator-extension
