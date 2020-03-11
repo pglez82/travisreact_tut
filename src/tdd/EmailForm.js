@@ -8,13 +8,9 @@ class EmailForm extends React.Component {
         this.state = {
             enabled:false,
             email:'',
-            remail:''
+            remail:'',
+            welcomemessage:''
         };
-    }
-
-    dummyMethod()
-    {
-        console.log("Just a method")
     }
 
     changeEmail(e) {
@@ -27,10 +23,31 @@ class EmailForm extends React.Component {
         this.setState({remail: remail, enabled: remail === this.state.email});
     }
 
+
+    //Simulate the user registration. In a real application this will
+    //call an api and we will have to mock the call using jest.mock
+    registerUser(email){
+        if (email==='alreadyregistered@test.com') //This user is already registered
+            return false
+        else
+            return true //Everything went smooth
+    }
+
+
+    submitForm(e)
+    {
+        e.preventDefault()
+        //Add the user to the database
+        if (this.registerUser(this.state.email))
+            this.setState({welcomemessage:'The user '+this.state.email+' has been registered!'})
+        else
+            this.setState({welcomemessage:'ERROR: The user '+this.state.email+' is already registered!'})
+    }
+
     render()
     {
         return(
-            <Form>
+            <Form onSubmit={this.submitForm.bind(this)}>
                 <Form.Control type="text" name="email"
                                 placeholder="Input email"
                                 aria-label="email-input"
@@ -41,6 +58,9 @@ class EmailForm extends React.Component {
                                 aria-label="remail-input"
                                 onChange={this.changeRemail.bind(this)} value={this.state.remail}/>
                 <Button variant="primary" type="submit" disabled={!this.state.enabled}>Submit</Button>
+                <div>
+                    <span hidden={this.state.welcomemessage===''}>{this.state.welcomemessage}</span>
+                </div>
             </Form>
         )
     }
