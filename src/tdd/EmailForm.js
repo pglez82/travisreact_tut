@@ -47,7 +47,7 @@ class EmailForm extends React.Component {
     render()
     {
         return(
-            <Form onSubmit={this.submitForm.bind(this)}>
+            <Form name="register" onSubmit={this.submitForm.bind(this)}>
                 <Form.Control type="text" name="email"
                                 placeholder="Input email"
                                 aria-label="email-input"
