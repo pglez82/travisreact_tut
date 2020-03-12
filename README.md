@@ -171,6 +171,118 @@ In this file we need to pay attention to the `before_install` section where we a
 ## More about testing
 The default setup for testing a react app is a testing framework called [Jest](https://jestjs.io/). Jest allow us to run only the relevant tests for the changed code. That means that if we change a file, it will run only the tests related with this file. Obviously we have the option of running all tests if we want. Jest is launched executing `npm test` as we have seen before. Test library used by default is [React testing library](https://github.com/testing-library/react-testing-library). This library is designed to easily test React components using the DOM elements.
 
-## Jest-cucumber [Under construction]
-Jest needs the tests to be under src and with name ending in test.js or spec.js
-VS code extensions: alexkrechik.cucumberautocomplete,piotr-porzuczek.jest-cucumber-code-generator-extension
+## End to end acceptance testing
+The idea here is to create [acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing) for our application. For doing so, we will use a bunch of techonologies and integrate them with our current setup:
+* [jest-cucumber](https://www.npmjs.com/package/jest-cucumber): With this tool we are going to write user stories and transform them into jest tests. A [extension](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) here will be handy to autocomplete the **Gherkin** language used by Cucumber.
+* [jest-puppeteer](https://www.npmjs.com/package/jest-puppeteer). This npm package will allow us two run the tests in a real web browser. Other alternatives are for instance [Selenium](https://www.selenium.dev/).
+
+### Configuration
+First of all, lets install the required packages:
+```
+npm install --save-dev puppeteer jest-cucumber
+npm install --save-dev puppeteer jest-puppeteer
+```
+Now, lets define a test with two scenarios. We will do this **outside the src folder**. The reason is that this tests will be executed in a browser and we do not want `npm test` to launch them (`npm test` is configured by default to find all the tests inside src).
+#### e2e/features/register-form.feature
+```
+Feature: Registering a new user
+
+Scenario: The user is not registered in the site
+  Given An unregistered user
+  When I fill the data in the form and press submit
+  Then A welcome message should be shown in the screen
+
+Scenario: The user is already registered in the site
+  Given An already registered user
+  When I fill the data in the form and press submit
+  Then An error message should be shown in the screen
+``` 
+Now, we have to convert this two scenarios into jest tests. 
+#### e2e/step-definitions/register-form-steps.js
+```javascript
+const {defineFeature, loadFeature}=require('jest-cucumber');
+const feature = loadFeature('./e2e/features/register-form.feature');
+
+defineFeature(feature, test => {
+  
+  beforeEach(async () => {
+    await page.goto('http://localhost:3000')
+  })
+
+  test('The user is not registered in the site', ({given,when,then}) => {
+    
+    let email;
+
+    given('An unregistered user', () => {
+      email = "newuser@test.com"
+    });
+
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
+    });
+
+    then('A welcome message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'The user '+email+' has been registered!' })
+    });
+  });
+
+  test('The user is already registered in the site', ({ given, when, then }) => {
+    
+    let email;
+
+    given('An already registered user', () => {
+      email = "alreadyregistered@test.com"
+    });
+
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
+    });
+
+    then('An error message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'ERROR: The user '+email+' is already registered!' })
+    });
+    
+  });
+});
+```
+As you can see, before each test, we connect to the browser with `page.goto('http://localhost:3000')`. The `page` object is exposed by jest-puppeteer. 
+
+The next step is configuring our enviroment so jest can execute this tests. We need to create a couple of files:
+#### e2e/jest-config.js
+```javascript
+module.exports = {
+  preset: 'jest-puppeteer',
+  testRegex: './*\\.steps\\.js$',
+}
+```
+This file will override the jest configuration for the `e2e` folder.
+
+#### jest-puppeteer.config.js
+```javascript
+module.exports = {
+    server: {
+      command: `npm start`,
+      port: 3000,
+      launchTimeout: 10000,
+      debug: true,
+    },
+  }
+```
+This file will be read by jest-puppeteer and is used to configure the enviroment in which we run the tests. In this case we are telling puppeteer to launch the application using `npm start`.
+
+We are almost there. The final step will be creating a new script in the `package.json` file to launch these tests:
+```json
+"test:e2e": "jest -c e2e/jest.config.js"
+```
+And as we want the tests to be executed in Travis as well, we need to add the following script to the `.travis.yml` file:
+```
+- npm run test:e2e
+```
