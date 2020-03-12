@@ -199,7 +199,7 @@ Scenario: The user is already registered in the site
 ``` 
 Now, we have to convert this two scenarios into jest tests. 
 #### e2e/step-definitions/register-form-steps.js
-```
+```javascript
 const {defineFeature, loadFeature}=require('jest-cucumber');
 const feature = loadFeature('./e2e/features/register-form.feature');
 
@@ -257,7 +257,7 @@ As you can see, before each test, we connect to the browser with `page.goto('htt
 
 The next step is configuring our enviroment so jest can execute this tests. We need to create a couple of files:
 #### e2e/jest-config.js
-```
+```javascript
 module.exports = {
   preset: 'jest-puppeteer',
   testRegex: './*\\.steps\\.js$',
@@ -266,7 +266,7 @@ module.exports = {
 This file will override the jest configuration for the `e2e` folder.
 
 #### jest-puppeteer.config.js
-```
+```javascript
 module.exports = {
     server: {
       command: `npm start`,
@@ -277,3 +277,12 @@ module.exports = {
   }
 ```
 This file will be read by jest-puppeteer and is used to configure the enviroment in which we run the tests. In this case we are telling puppeteer to launch the application using `npm start`.
+
+We are almost there. The final step will be creating a new script in the `package.json` file to launch these tests:
+```json
+"test:e2e": "jest -c e2e/jest.config.js"
+```
+And as we want the tests to be executed in Travis as well, we need to add the following script to the `.travis.yml` file:
+```
+- npm run test:e2e
+```
