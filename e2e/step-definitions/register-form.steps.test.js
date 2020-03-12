@@ -1,8 +1,11 @@
 const {defineFeature, loadFeature}=require('jest-cucumber');
-
-const feature = loadFeature('./src/specs/features/register-form.feature');
+const feature = loadFeature('./e2e/features/register-form.feature');
 
 defineFeature(feature, test => {
+  
+  beforeEach(async () => {
+    await page.goto('http://localhost:3000')
+  })
 
   test('The user is not registered in the site', ({given,when,then}) => {
     
@@ -12,12 +15,16 @@ defineFeature(feature, test => {
       email = "newuser@test.com"
     });
 
-    when('I fill the data in the form and press submit', () => {
-      
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
     });
 
-    then('A welcome message should be shown in the screen', () => {
-      
+    then('A welcome message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'The user '+email+' has been registered!' })
     });
   });
 
@@ -29,12 +36,16 @@ defineFeature(feature, test => {
       email = "alreadyregistered@test.com"
     });
 
-    when('I fill the data in the form and press submit', () => {
-      
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
     });
 
-    then('An error message should be shown in the screen', () => {
-      
+    then('An error message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'ERROR: The user '+email+' is already registered!' })
     });
     
   });
