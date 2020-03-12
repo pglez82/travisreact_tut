@@ -174,7 +174,7 @@ The default setup for testing a react app is a testing framework called [Jest](h
 ## End to end acceptance testing
 The idea here is to create [acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing) for our application. For doing so, we will use a bunch of techonologies and integrate them with our current setup:
 * [jest-cucumber](https://www.npmjs.com/package/jest-cucumber): With this tool we are going to write user stories and transform them into jest tests. A [extension](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) here will be handy to autocomplete the **Gherkin** language used by Cucumber.
-* [jest-puppeter](https://www.npmjs.com/package/jest-puppeteer). This npm package will allow us two run the tests in a real web browser. Other alternatives are for instance [Selenium](https://www.selenium.dev/).
+* [jest-puppeteer](https://www.npmjs.com/package/jest-puppeteer). This npm package will allow us two run the tests in a real web browser. Other alternatives are for instance [Selenium](https://www.selenium.dev/).
 
 ### Configuration
 First of all, lets install the required packages:
@@ -197,3 +197,83 @@ Scenario: The user is already registered in the site
   When I fill the data in the form and press submit
   Then An error message should be shown in the screen
 ``` 
+Now, we have to convert this two scenarios into jest tests. 
+#### e2e/step-definitions/register-form-steps.js
+```
+const {defineFeature, loadFeature}=require('jest-cucumber');
+const feature = loadFeature('./e2e/features/register-form.feature');
+
+defineFeature(feature, test => {
+  
+  beforeEach(async () => {
+    await page.goto('http://localhost:3000')
+  })
+
+  test('The user is not registered in the site', ({given,when,then}) => {
+    
+    let email;
+
+    given('An unregistered user', () => {
+      email = "newuser@test.com"
+    });
+
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
+    });
+
+    then('A welcome message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'The user '+email+' has been registered!' })
+    });
+  });
+
+  test('The user is already registered in the site', ({ given, when, then }) => {
+    
+    let email;
+
+    given('An already registered user', () => {
+      email = "alreadyregistered@test.com"
+    });
+
+    when('I fill the data in the form and press submit', async () => {
+      await expect(page).toFillForm('form[name="register"]', {
+        email: email,
+        remail: email,
+      })
+      await expect(page).toClick('button', { text: 'Submit' })
+    });
+
+    then('An error message should be shown in the screen', async () => {
+      await expect(page).toMatchElement('span', { text: 'ERROR: The user '+email+' is already registered!' })
+    });
+    
+  });
+});
+```
+As you can see, before each test, we connect to the browser with `page.goto('http://localhost:3000')`. The `page` object is exposed by jest-puppeteer. 
+
+The next step is configuring our enviroment so jest can execute this tests. We need to create a couple of files:
+#### e2e/jest-config.js
+```
+module.exports = {
+  preset: 'jest-puppeteer',
+  testRegex: './*\\.steps\\.js$',
+}
+```
+This file will override the jest configuration for the `e2e` folder.
+
+#### jest-puppeteer.config.js
+```
+module.exports = {
+    server: {
+      command: `npm start`,
+      port: 3000,
+      launchTimeout: 10000,
+      debug: true,
+    },
+  }
+```
+This file will be read by jest-puppeteer and is used to configure the enviroment in which we run the tests. In this case we are telling puppeteer to launch the application using `npm start`.
