@@ -171,6 +171,29 @@ In this file we need to pay attention to the `before_install` section where we a
 ## More about testing
 The default setup for testing a react app is a testing framework called [Jest](https://jestjs.io/). Jest allow us to run only the relevant tests for the changed code. That means that if we change a file, it will run only the tests related with this file. Obviously we have the option of running all tests if we want. Jest is launched executing `npm test` as we have seen before. Test library used by default is [React testing library](https://github.com/testing-library/react-testing-library). This library is designed to easily test React components using the DOM elements.
 
-## Jest-cucumber [Under construction]
-Jest needs the tests to be under src and with name ending in test.js or spec.js
-VS code extensions: alexkrechik.cucumberautocomplete,piotr-porzuczek.jest-cucumber-code-generator-extension
+## End to end acceptance testing
+The idea here is to create [acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing) for our application. For doing so, we will use a bunch of techonologies and integrate them with our current setup:
+* [jest-cucumber](https://www.npmjs.com/package/jest-cucumber): With this tool we are going to write user stories and transform them into jest tests. A [extension](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete) here will be handy to autocomplete the **Gherkin** language used by Cucumber.
+* [jest-puppeter](https://www.npmjs.com/package/jest-puppeteer). This npm package will allow us two run the tests in a real web browser. Other alternatives are for instance [Selenium](https://www.selenium.dev/).
+
+### Configuration
+First of all, lets install the required packages:
+```
+npm install --save-dev puppeteer jest-cucumber
+npm install --save-dev puppeteer jest-puppeteer
+```
+Now, lets define a test with two scenarios. We will do this **outside the src folder**. The reason is that this tests will be executed in a browser and we do not want `npm test` to launch them (`npm test` is configured by default to find all the tests inside src).
+#### e2e/features/register-form.feature
+```
+Feature: Registering a new user
+
+Scenario: The user is not registered in the site
+  Given An unregistered user
+  When I fill the data in the form and press submit
+  Then A welcome message should be shown in the screen
+
+Scenario: The user is already registered in the site
+  Given An already registered user
+  When I fill the data in the form and press submit
+  Then An error message should be shown in the screen
+``` 
