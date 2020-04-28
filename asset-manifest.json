@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/travisreact_tut/static/css/main.d1b05096.chunk.css",
+    "main.js": "/travisreact_tut/static/js/main.a279cf26.chunk.js",
+    "main.js.map": "/travisreact_tut/static/js/main.a279cf26.chunk.js.map",
+    "runtime-main.js": "/travisreact_tut/static/js/runtime-main.ef777545.js",
+    "runtime-main.js.map": "/travisreact_tut/static/js/runtime-main.ef777545.js.map",
+    "static/js/2.e033f11c.chunk.js": "/travisreact_tut/static/js/2.e033f11c.chunk.js",
+    "static/js/2.e033f11c.chunk.js.map": "/travisreact_tut/static/js/2.e033f11c.chunk.js.map",
+    "index.html": "/travisreact_tut/index.html",
+    "precache-manifest.e2032ed2aa0c270eee41ef6d353aff34.js": "/travisreact_tut/precache-manifest.e2032ed2aa0c270eee41ef6d353aff34.js",
+    "service-worker.js": "/travisreact_tut/service-worker.js",
+    "static/css/main.d1b05096.chunk.css.map": "/travisreact_tut/static/css/main.d1b05096.chunk.css.map",
+    "static/js/2.e033f11c.chunk.js.LICENSE": "/travisreact_tut/static/js/2.e033f11c.chunk.js.LICENSE",
+    "static/media/logo.svg": "/travisreact_tut/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ef777545.js",
+    "static/js/2.e033f11c.chunk.js",
+    "static/css/main.d1b05096.chunk.css",
+    "static/js/main.a279cf26.chunk.js"
+  ]
+}
