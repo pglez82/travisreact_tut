@@ -265,6 +265,8 @@ module.exports = {
 ```
 This file will override the jest configuration for the `e2e` folder.
 
+Optional: If we get timeout problems we might configure jest time out. Just add `setupFilesAfterEnv: ['./jest-setup.js']` and in this new file just write: `jest.setTimeout(60000);` 
+
 #### jest-puppeteer.config.js
 ```javascript
 module.exports = {
@@ -276,7 +278,16 @@ module.exports = {
     },
   }
 ```
-This file will be read by jest-puppeteer and is used to configure the enviroment in which we run the tests. In this case we are telling puppeteer to launch the application using `npm start`.
+This file will be read by jest-puppeteer and is used to configure the enviroment in which we run the tests. In this case we are telling puppeteer to launch the application using `npm start`. 
+
+Note that tests are not executed in the browser launched by `npm start`, they are executed in a headless chromium. If we want to launch chromium in no headless mode and see the actions of our tests we must add this configuration to the previous file:
+
+```
+launch: {
+   headless: false,
+   devtools: true
+}
+```
 
 We are almost there. The final step will be creating a new script in the `package.json` file to launch these tests:
 ```json
@@ -286,3 +297,4 @@ And as we want the tests to be executed in Travis as well, we need to add the fo
 ```
 - npm run test:e2e
 ```
+
